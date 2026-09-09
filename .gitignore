@@ -1,0 +1,6 @@
+# The built application is published as a release asset, not committed:
+# a 1.8 MB bundle in every clone, changing on every rebuild, is not what
+# git is for. See the Releases page.
+MacGamePadFix.app/
+*.zip
+.DS_Store
