@@ -101,8 +101,8 @@ Off by default, and it is one value under the pad's key, `XInputRumble`.
 It used to have to be left off for any game using Sony's own library: the small
 haptics device carried the pad's vendor and product ids, that library finds its
 pad by reading exactly those, and it saw two DualSense where one answered
-nothing. Since 0.2.2 the device is offered to XInput and to nothing else, and a
-title that would not start with this on now does.
+nothing. Since 0.2.2 the device is offered to XInput and to nothing else, and the title
+that would not start with this on now does.
 
 It coexists with **Steam Input**, which was worth checking rather than assuming:
 Steam presents a virtual pad that is itself an XInput device, so this adds a
@@ -252,13 +252,18 @@ repository is where the built application is published.
 
 ## Status
 
-**0.2.1, a pre-release.** Twenty-three patches now. The three that tell the
+**0.2.2, a pre-release.** Twenty-three patches now. The three that tell the
 truth about the bus have been in daily use on the author's machine since
 September and are the settled part. The XInput rumble is newer and was measured
 rather than guessed at every step — the frame cost, the stop behaviour, the two
 paths and the pad's own power field each have a number behind them — but it has
 been exercised on a handful of titles by one person, on one DualSense and one
 DualSense Edge. The wired presentation is still explicitly unfinished.
+
+One thing 0.2.2 also removed: the motors device used to declare a button that is
+never pressed, and a game reading it could stop holding a button down — a title
+here would not keep L3 held while this was on. It declares none now, and
+`xinput` no longer refuses a device for having no buttons to count.
 
 The narrow half of `mgvf-0028` is reasoned rather than exercised: the three
 conditions that mark a device as carrying motors and nothing else were read from
