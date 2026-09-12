@@ -106,6 +106,26 @@ misfortune to work around. **None of those games need it** — they drive the pa
 themselves and already rumble, over Bluetooth, which is what the three patches
 above are for. This is for the games that have never heard of a DualSense.
 
+## How much of the rumble reaches the motors
+
+A DualSense on Bluetooth is written over a link that carries about sixty-five
+reports a second, so this driver holds back a motor change too small to feel
+rather than spending a slot on it. That band is four parts in 255 — and until
+0.2.1 it was comparing the wrong number.
+
+The strength setting multiplies what a game asks for, and it is applied *after*
+the band has already decided. So the band meant four parts in 255 at the neutral
+point and forty at the top of the range: **turning the strength up made the
+rumble coarser instead of stronger.** Measured, at ten times: 632 changes held
+in one session, and half of them would have been ten parts or more at the
+motors.
+
+It now measures what the pad will actually receive, and it no longer holds back
+a change that rides inside a packet the game was sending anyway — those cost
+nothing, so there was never anything to save. Measured across two runs of one
+title with only that between them: **three and a half times as much of what the
+game asks now reaches the motors**, and the frame rate is unchanged.
+
 ## Which way the pad vibrates
 
 A DualSense knows two ways to be asked. The **modern** path is the pad's own,
@@ -223,7 +243,7 @@ repository is where the built application is published.
 
 ## Status
 
-**0.2.0, a pre-release.** Twenty-three patches now. The three that tell the
+**0.2.1, a pre-release.** Twenty-three patches now. The three that tell the
 truth about the bus have been in daily use on the author's machine since
 September and are the settled part. The XInput rumble is newer and was measured
 rather than guessed at every step — the frame cost, the stop behaviour, the two
