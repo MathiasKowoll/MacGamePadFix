@@ -1,8 +1,9 @@
 # MacGamePadFix
 
-**A PlayStation controller on Bluetooth does not rumble in Windows games under
-CrossOver on a Mac. This installs ten patched Wine files into one CrossOver
-and makes it work.**
+**A PlayStation controller on Bluetooth is unreliable in Windows games under
+CrossOver on a Mac: rumble and the adaptive triggers do not always work, and
+which titles they work in is not something you can predict. This installs ten
+patched Wine files into one CrossOver and makes them work.**
 
 Nothing else. It does not know about games, it does not launch anything, it does
 not phone anywhere. It replaces ten files inside a CrossOver you point it at,
@@ -12,12 +13,12 @@ keeps the originals beside them, and puts them back when you ask.
 
 ## The problem
 
-Connect a DualSense by cable and it rumbles in every game. Connect the same pad
-by Bluetooth and it never rumbles — in any game, on any bottle. The PS button
-and the touchpad go quiet too. People have blamed the games, the pad, Steam and
-CrossOver in turn.
+Connect a DualSense by cable and it rumbles. Connect the same pad by Bluetooth
+and it is a lottery: some titles rumble, others do not, and the adaptive
+triggers behave the same way. The PS button and the touchpad can go quiet too.
+People have blamed the games, the pad, Steam and CrossOver in turn.
 
-It is none of them.
+It is none of them, and the inconsistency is the clue.
 
 ## What is actually wrong
 
@@ -85,7 +86,7 @@ well as to everything that had it before, and `xinput1_3` learns that a gamepad'
 axes and buttons come in two conventions rather than one.
 
 **So a game that only speaks XInput now rumbles a DualSense over Bluetooth.**
-Measured on titles that had never rumbled at all here.
+Measured on titles that had no rumble here at all before it.
 
 It costs nothing in frames, and that took work to be able to say. A Bluetooth
 link to a pad carries about sixty-five reports a second and no API moves it, so
