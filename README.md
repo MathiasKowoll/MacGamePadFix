@@ -98,13 +98,20 @@ carried that way, and the frame cost gone.
 
 Off by default, and it is one value under the pad's key, `XInputRumble`.
 
-**Leave it off for a game that uses Sony's own library.** None of those start
-with it on: the small haptics device shares the pad's vendor and product ids,
-and that library finds its pad by walking the HID devices and reading exactly
-those, so it sees two DualSense and one of them answers nothing. That is not a
-misfortune to work around. **None of those games need it** — they drive the pad
-themselves and already rumble, over Bluetooth, which is what the three patches
-above are for. This is for the games that have never heard of a DualSense.
+It used to have to be left off for any game using Sony's own library: the small
+haptics device carried the pad's vendor and product ids, that library finds its
+pad by reading exactly those, and it saw two DualSense where one answered
+nothing. Since 0.2.2 the device is offered to XInput and to nothing else, and a
+title that would not start with this on now does.
+
+**Turn it off for a game you play through Steam Input.** Steam already presents
+a virtual pad that *is* an XInput device; this adds a second one that carries
+motors and no sticks, and a game can pick that one instead.
+
+**And a game that uses Sony's library does not need it either way** — it drives
+the pad itself and already rumbles over Bluetooth, which is what the three
+patches above are for. This is for the games that have never heard of a
+DualSense.
 
 ## How much of the rumble reaches the motors
 
@@ -251,8 +258,7 @@ paths and the pad's own power field each have a number behind them — but it ha
 been exercised on a handful of titles by one person, on one DualSense and one
 DualSense Edge. The wired presentation is still explicitly unfinished.
 
-One thing to know rather than to fix: no game that drives the pad through
-Sony's own library starts while `XInputRumble` is on, because the small haptics
-device shares the pad's vendor and product ids and that library enumerates by
-them. Those games do not need it and rumble without it, so the rule is simply
-that the switch belongs to the other kind of game.
+The narrow half of `mgvf-0028` is reasoned rather than exercised: the three
+conditions that mark a device as carrying motors and nothing else were read from
+the descriptor this project builds, and there is no real force-feedback wheel
+here to check that a genuine one is left alone.
