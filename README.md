@@ -104,9 +104,11 @@ pad by reading exactly those, and it saw two DualSense where one answered
 nothing. Since 0.2.2 the device is offered to XInput and to nothing else, and a
 title that would not start with this on now does.
 
-**Turn it off for a game you play through Steam Input.** Steam already presents
-a virtual pad that *is* an XInput device; this adds a second one that carries
-motors and no sticks, and a game can pick that one instead.
+It coexists with **Steam Input**, which was worth checking rather than assuming:
+Steam presents a virtual pad that is itself an XInput device, so this adds a
+second one carrying motors and no sticks, and a game could in principle pick the
+wrong one. Measured on a title that reaches its controller only through Steam
+Input, with both on: it rumbles and plays normally.
 
 **And a game that uses Sony's library does not need it either way** — it drives
 the pad itself and already rumbles over Bluetooth, which is what the three
