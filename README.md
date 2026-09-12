@@ -96,9 +96,15 @@ the motors are stamped **into a packet the game is already sending**, so nothing
 of ours is ever added to the link. Measured: 92-95% of every motor change
 carried that way, and the frame cost gone.
 
-Off by default. It is one value under the pad's key, `XInputRumble`, because a
-game that already drives the pad as a DualSense does not need it and one title
-here refuses to start with it on.
+Off by default, and it is one value under the pad's key, `XInputRumble`.
+
+**Leave it off for a game that uses Sony's own library.** None of those start
+with it on: the small haptics device shares the pad's vendor and product ids,
+and that library finds its pad by walking the HID devices and reading exactly
+those, so it sees two DualSense and one of them answers nothing. That is not a
+misfortune to work around. **None of those games need it** — they drive the pad
+themselves and already rumble, over Bluetooth, which is what the three patches
+above are for. This is for the games that have never heard of a DualSense.
 
 ## Which way the pad vibrates
 
@@ -225,7 +231,8 @@ paths and the pad's own power field each have a number behind them — but it ha
 been exercised on a handful of titles by one person, on one DualSense and one
 DualSense Edge. The wired presentation is still explicitly unfinished.
 
-Known and not fixed: one title that drives the pad through Sony's own library
-will not start while `XInputRumble` is on, because the small haptics device
-shares the pad's vendor and product ids and that library enumerates by them.
-Leave it off for those titles; they drive the pad themselves and do not need it.
+One thing to know rather than to fix: no game that drives the pad through
+Sony's own library starts while `XInputRumble` is on, because the small haptics
+device shares the pad's vendor and product ids and that library enumerates by
+them. Those games do not need it and rumble without it, so the rule is simply
+that the switch belongs to the other kind of game.
