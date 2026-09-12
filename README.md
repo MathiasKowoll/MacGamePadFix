@@ -1,11 +1,11 @@
 # MacGamePadFix
 
 **A PlayStation controller on Bluetooth does not rumble in Windows games under
-CrossOver on a Mac. This installs three patched Wine files into one CrossOver
+CrossOver on a Mac. This installs ten patched Wine files into one CrossOver
 and makes it work.**
 
 Nothing else. It does not know about games, it does not launch anything, it does
-not phone anywhere. It replaces four files inside a CrossOver you point it at,
+not phone anywhere. It replaces ten files inside a CrossOver you point it at,
 keeps the originals beside them, and puts them back when you ask.
 
 ---
@@ -71,6 +71,50 @@ Nothing here is specific to one game. The patches never look at which controller
 it is — they key on the bus — so a DualShock 4 on Bluetooth gets the same truth
 told about it.
 
+## And rumble in games that have never heard of a DualSense
+
+The three patches above tell the truth about the bus, which is what a game needs
+if it drives the pad **as a DualSense**. Most Windows games do not. They ask
+XInput for "controller 1" and expect an Xbox pad, and XInput had no motors to
+offer them, because a DualSense's motors are not where an Xbox pad keeps them.
+
+Six more patches give it some. The bus driver adds a small haptics device beside
+the pad — the pad keeps every byte of its own descriptor, and the motors arrive
+next door on a device of their own — `hidclass` offers that device to XInput as
+well as to everything that had it before, and `xinput1_3` learns that a gamepad's
+axes and buttons come in two conventions rather than one.
+
+**So a game that only speaks XInput now rumbles a DualSense over Bluetooth.**
+Measured on titles that had never rumbled at all here.
+
+It costs nothing in frames, and that took work to be able to say. A Bluetooth
+link to a pad carries about sixty-five reports a second and no API moves it, so
+a second program writing to the pad every frame is offering more than the radio
+drains, and everybody pays — including the game, on the thread that carries its
+own writes. The answer is not to write less often. It is to not write at all:
+the motors are stamped **into a packet the game is already sending**, so nothing
+of ours is ever added to the link. Measured: 92-95% of every motor change
+carried that way, and the frame cost gone.
+
+Off by default. It is one value under the pad's key, `XInputRumble`, because a
+game that already drives the pad as a DualSense does not need it and one title
+here refuses to start with it on.
+
+## Which way the pad vibrates
+
+A DualSense knows two ways to be asked. The **modern** path is the pad's own,
+the one Sony's library asks for on every packet it sends, and it is the finer of
+the two. The **legacy** path asks the pad to imitate a pair of rotating-mass
+motors, and it is clearly harder at the same command — measured by running one
+Sony title twice with nothing changed but that.
+
+The modern path is what you get. `VibrationMode` under the pad's key asks for
+the other, and `VibrationGain` is a percentage over the motors where 0 is
+silence for every game at once. Both are preferences and neither is a repair.
+
+There is no third setting hiding anywhere. Sony's own library was taken apart to
+be sure of that: it writes two motor bytes and one path bit, and nothing else.
+
 ## What else is in it
 
 Five more patches came out of using it, and they are described in full in the
@@ -84,11 +128,6 @@ them you should know about before you install:
   knowing: **while a bottle is running, macOS and its own applications cannot
   use the pad.** It is released when the bottle shuts down, which for most
   people means when they quit Steam.
-- **`mgvf-0009` can make the pad hit harder, or stay quiet.** Two values under
-  the pad's own key: one rewrites a game's choice of the haptic path to the
-  legacy motors, which one person here found clearly stronger at the same
-  value; the other is a percentage over the motors, where 0 is silence for
-  every game at once. Both are off unless asked for.
 - **`mgvf-0005`, `mgvf-0007` and `mgvf-0008` present a Bluetooth pad as a
   wired one**, for the titles that only accept a wired one. **Off by default,
   and leave it off unless you are experimenting**: it does make those titles
@@ -126,7 +165,7 @@ hardware on the pad. No patch reaches them, on any system.
 version and shows you the refusal.
 
 That is not timidity. These are Wine binaries built from the Wine source of that
-exact CrossOver, replacing four files the rest of that same Wine is compiled
+exact CrossOver, replacing ten files the rest of that same Wine is compiled
 against. Mixing Wine binaries across versions does not fail loudly: it gives you
 a bottle that starts, runs, and then misbehaves somewhere nobody would ever
 connect to a controller patch. Refusing is the only honest answer.
@@ -137,13 +176,13 @@ let the bottle shut down, and try again.
 
 ## What it does to CrossOver, in plain words
 
-- Replaces `winebus.sys`, `setupapi.dll`, `ntoskrnl.exe` and `winebus.so`
-  inside the application, and keeps CrossOver's own four beside them as
-  `.mgvf-stock`.
+- Replaces `winebus.sys`, `setupapi.dll`, `ntoskrnl.exe`, `hidclass.sys`, the
+  five `xinput` DLLs and `winebus.so` inside the application, and keeps
+  CrossOver's own ten beside them as `.mgvf-stock`.
 - **Re-signs the application ad hoc**, because replacing files inside a signed
   bundle breaks its seal and macOS would otherwise call it damaged. CodeWeavers'
   signature is gone until you restore.
-- **Restore** puts their four files back and re-signs again. Nothing is lost.
+- **Restore** puts their ten files back and re-signs again. Nothing is lost.
 - **A CrossOver update overwrites all of it.** Run the install again afterwards.
 
 ## Running it the first time
@@ -158,7 +197,7 @@ Install. Quit Steam first.
 
 ## Where the binaries come from, and the licence
 
-The four files are **Wine**, which is **LGPL-2.1-or-later** — somebody else's
+The ten files are **Wine**, which is **LGPL-2.1-or-later** — somebody else's
 program with our patches on top. They are redistributed here because a fix that
 only helps people who can build Wine is not a fix.
 
@@ -173,13 +212,20 @@ binaries you are running.
 
 The application itself is **GPL-3.0-or-later**; see `LICENSE`. Its source is
 one Swift file and a build script, kept beside the patches in `app-padfix/` of
-that same repository, so that the four binaries have exactly one home. This
+that same repository, so that the ten binaries have exactly one home. This
 repository is where the built application is published.
 
 ## Status
 
-**0.1.1, a pre-release.** The three patches that make a pad rumble are
-measured and have been in daily use on the author's machine; the five that came
-after are newer, and the wired presentation among them is explicitly
-unfinished. The application has been run against a real CrossOver and a stock
-one and its refusals exercised, but it has not been used by anyone else yet.
+**0.2.0, a pre-release.** Twenty-three patches now. The three that tell the
+truth about the bus have been in daily use on the author's machine since
+September and are the settled part. The XInput rumble is newer and was measured
+rather than guessed at every step — the frame cost, the stop behaviour, the two
+paths and the pad's own power field each have a number behind them — but it has
+been exercised on a handful of titles by one person, on one DualSense and one
+DualSense Edge. The wired presentation is still explicitly unfinished.
+
+Known and not fixed: one title that drives the pad through Sony's own library
+will not start while `XInputRumble` is on, because the small haptics device
+shares the pad's vendor and product ids and that library enumerates by them.
+Leave it off for those titles; they drive the pad themselves and do not need it.
