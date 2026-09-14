@@ -192,6 +192,11 @@ that no DualSense declares. Steam Input is the answer there, on this stack and
 on Windows, and it costs the PlayStation button glyphs because the game
 genuinely sees an Xbox pad.
 
+**Lights are not chosen by default.** Since `mgvf-0031` the lightbar colour and
+the player number can be set per pad model, with `LightbarColour` and
+`PlayerLights` under the pad's key; they replace what a game or Steam Input
+already sends, so a title that never sends a light change gets nothing yet.
+
 **And the pad's speaker and microphone stay wired-only.** Those are USB audio
 hardware on the pad. No patch reaches them, on any system.
 
@@ -253,7 +258,8 @@ repository is where the built application is published.
 
 ## Status
 
-**0.2.3, a pre-release.** Twenty-three patches now. The three that tell the
+**0.2.3, a pre-release**, which shipped twenty-seven patches; the current
+build carries twenty-nine. The three that tell the
 truth about the bus have been in daily use on the author's machine since
 September and are the settled part. The XInput rumble is newer and was measured
 rather than guessed at every step — the frame cost, the stop behaviour, the two
