@@ -258,8 +258,7 @@ repository is where the built application is published.
 
 ## Status
 
-**0.2.3, a pre-release**, which shipped twenty-seven patches; the current
-build carries twenty-nine. The three that tell the
+**0.2.4, a pre-release.** Twenty-nine patches now. The three that tell the
 truth about the bus have been in daily use on the author's machine since
 September and are the settled part. The XInput rumble is newer and was measured
 rather than guessed at every step — the frame cost, the stop behaviour, the two
