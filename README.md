@@ -197,6 +197,15 @@ the player number can be set per pad model, with `LightbarColour` and
 `PlayerLights` under the pad's key; they replace what a game or Steam Input
 already sends, so a title that never sends a light change gets nothing yet.
 
+**A pad nobody is using is asked to turn itself off.** Since `mgvf-0033`, a
+DualSense on Bluetooth that the bottle holds is sent the pad's own power-off
+request after 20 minutes with no stick, trigger or button input
+(`IdlePowerOffMinutes` under the pad's key: 0 for never, anything else clamped
+to 5 to 240). Moving only the gyro or the touchpad does not count. The same
+request, sent with nothing but macOS running, turned off a DualSense and a
+DualSense Edge within a tenth of a second; inside a game it is not measured yet.
+It does nothing once the bottle has shut down.
+
 **And the pad's speaker and microphone stay wired-only.** Those are USB audio
 hardware on the pad. No patch reaches them, on any system.
 
