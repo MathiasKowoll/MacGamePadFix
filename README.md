@@ -1,5 +1,12 @@
 # MacGamePadFix
 
+> **Archived.** MacGamePadFix still works as released, for CrossOver 26.3 with a
+> DualSense on Bluetooth, but it is no longer developed. The controller work
+> moved on to [MacGameFix](https://github.com/MathiasKowoll/MacGameFix), which
+> brings DualSense haptics to games through Wine modules, and to a controller
+> bridge for NotProton that plays haptics over Bluetooth and emulates them where
+> a game only asks for rumble.
+
 **A PlayStation controller on Bluetooth is unreliable in Windows games under
 CrossOver on a Mac: rumble and the adaptive triggers do not always work, and
 which titles they work in is not something you can predict. This installs ten
